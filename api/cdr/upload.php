@@ -1,5 +1,7 @@
 <?php
-//IMPORTANT : This file is not authenticated. This is a database entry point and should be strongly protected.
+//IMPORTANT TODO: This file is not authenticated. This is a database entry point and should be strongly protected.
+//IMPORTANT TODO: dmcc is an unvalidated string. The specification document does not specify what dmcc is, and so could be code or other malicious content that could create possible attack vectors.
+//  We should validate the possible range of values for dmcc and reject anything outside that range as soon as possible.
 
 // Endpoint: /api/cdr/upload.php
 // Accepts a file upload and processes each line

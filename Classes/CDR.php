@@ -1,5 +1,6 @@
 <?php
-
+//IMPORTANT TODO: dmcc is an unvalidated string. The specification document does not specify what dmcc is, and so could be code or other malicious content that could create possible attack vectors.
+//  We should validate the possible range of values for dmcc and reject anything outside that range as soon as possible.
 
 class CDR {
 	private $uniqueId;
