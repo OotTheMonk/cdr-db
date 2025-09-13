@@ -21,7 +21,12 @@ $tests = [
    ["9991,2935", ["id"=>9991, "mnc"=>null, "bytes_used"=>2935, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (2 fields)"],
    ["7291,293451", ["id"=>7291, "mnc"=>null, "bytes_used"=>293451, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (large bytes)"],
    // Extended parsing unit tests
-   ["fred4,123", "exception", "String id (expect exception)"],
+   ["fred4,0d39f,0,495594,214", "exception", "String id (expect exception)"],
+   ["4,0d39f,0,495594", "exception", "Too few fields (expect exception)"],
+   ["4,0d39f,0,495594,214,123", "exception", "Too many fields (expect exception)"],
+   ["4,0d39f,fred,495594,214", "exception", "String mnc (expect exception)"],
+   ["4,0d39f,394,fred,214", "exception", "String bytes used (expect exception)"],
+   ["4,0d39f,394,495594,fred", "exception", "String cell id (expect exception)"],
    ["4,0d39f,0,495594,214", ["id"=>4, "mnc"=>0, "bytes_used"=>495594, "dmcc"=>"0d39f", "cellid"=>214, "ip"=>null], "Extended parsing (5 fields)"],
    ["7194,b33,394,495593,192", ["id"=>7194, "mnc"=>394, "bytes_used"=>495593, "dmcc"=>"b33", "cellid"=>192, "ip"=>null], "Extended parsing (all fields)"],
    // Hex parsing unit tests
