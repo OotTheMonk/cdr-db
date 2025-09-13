@@ -20,7 +20,7 @@
 
 <h3>Upload CDR File</h3>
 <form id="cdr-upload-form">
-    <input type="file" name="cdr_file" id="cdr_file" required />
+    <input type="file" name="file" id="cdr_file" required />
     <button type="submit">Upload</button>
 </form>
 <div id="upload-status"></div>
@@ -74,7 +74,7 @@ document.getElementById('cdr-upload-form').addEventListener('submit', async func
         statusDiv.textContent = 'Please select a file.';
         return;
     }
-    formData.append('cdr_file', fileInput.files[0]);
+    formData.append('file', fileInput.files[0]);
     try {
         const response = await fetch('api/cdr/upload.php', {
             method: 'POST',
