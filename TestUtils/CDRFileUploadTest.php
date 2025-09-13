@@ -7,12 +7,19 @@ $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https'
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $apiUrl = $protocol . '://' . $host . '/cdr-db/api/cdr/upload.php';
 
+
 $testFile = __DIR__ . '/test_file.txt';
 $badTestFile = __DIR__ . '/bad_test_file.txt';
+$invalidTestFile = __DIR__ . '/invalid_test_file.txt';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $useBad = isset($_POST['upload_bad']);
-    $fileToUpload = $useBad ? $badTestFile : $testFile;
+    if (isset($_POST['upload_bad'])) {
+        $fileToUpload = $badTestFile;
+    } elseif (isset($_POST['upload_invalid'])) {
+        $fileToUpload = $invalidTestFile;
+    } else {
+        $fileToUpload = $testFile;
+    }
     if (!file_exists($fileToUpload)) {
         echo "<pre>Test file not found: $fileToUpload</pre>";
         exit;
@@ -33,9 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // Separate headers and body
         $header_size = strpos($response, "\r\n\r\n");
-        $headers = substr($response, 0, $header_size);
         $body = substr($response, $header_size + 4);
-        echo "<pre>HTTP Status: $http_code\n$headers\n\nAPI Response:\n" . htmlspecialchars($body) . "</pre>";
+        echo "<pre>API Response:\n" . htmlspecialchars($body) . "</pre>";
     }
     echo '<a href="?">Try Again</a>';
     exit;
@@ -47,5 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <form method="post">
     <button type="submit" name="upload_test">Upload Test File</button>
     <button type="submit" name="upload_bad">Upload Bad Test File</button>
+    <button type="submit" name="upload_invalid">Upload Invalid Test File</button>
 </form>
 </body></html>

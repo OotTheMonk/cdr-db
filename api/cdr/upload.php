@@ -12,10 +12,6 @@
 require_once '../../Classes/CDR.php';
 require_once '../../Repository/CDRRepository.php';
 
-// Prevent PHP from exposing version info in headers
-header_remove('X-Powered-By');
-header('Content-Type: application/json');
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file = $_FILES['file']['tmp_name'];
     $handle = fopen($file, 'r');
@@ -47,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     }
     fclose($handle);
     $message = "Upload complete. Failed lines: $exceptionCount.";
+    header('Content-Type: application/json');
     echo json_encode([
         'status' => 'success',
         'records' => $results,
@@ -55,6 +52,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     exit;
 } else {
     http_response_code(400);
+    header('Content-Type: application/json');
     echo json_encode(['status' => 'error', 'message' => 'No file uploaded'], JSON_PRETTY_PRINT);
     exit;
 }
