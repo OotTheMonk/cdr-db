@@ -1,4 +1,6 @@
 <?php
+//IMPORTANT : This file is not authenticated. This is a database entry point and should be strongly protected.
+
 // Endpoint: /api/cdr/upload.php
 // Accepts a file upload and processes each line
 require_once '../../Classes/CDR.php';
