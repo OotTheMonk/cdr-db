@@ -52,8 +52,8 @@ async function fetchRecords() {
         const res = await fetch(getAllUrl);
         if (!res.ok) throw new Error('Could not connect to API.');
         const data = await res.json();
-        if (data.records) {
-            renderTable(data.records);
+        if (Array.isArray(data)) {
+            renderTable(data);
         } else {
             document.getElementById('error').textContent = 'No records found or invalid API response.';
             renderTable([]);
