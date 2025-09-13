@@ -31,12 +31,12 @@ class CDR {
 	// Returns a normalized usage object as an associative array
 	public function getNormalizedUsage() {
 		return [
-			"id" => 7294,
-			"mnc" => 182,
-			"bytes_used" => 293451,
-			"dmcc" => null,
-			"cellid" => 31194,
-			"ip" => "192.168.0.1"
+			"id" => $this->id,
+			"mnc" => $this->mnc,
+			"bytes_used" => $this->bytes_used,
+			"dmcc" => $this->dmcc,
+			"cellid" => $this->cellid,
+			"ip" => $this->ip
 		];
 	}
 }
