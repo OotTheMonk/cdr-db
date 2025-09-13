@@ -13,9 +13,9 @@ class CDR {
 	public function __construct(string $rawString) {
 		$this->rawString = $rawString;
 		$parts = explode(',', $rawString);
-		if (count($parts) < 2) {
-			throw new \InvalidArgumentException('Invalid CDR string: must have at least two comma-separated values.');
-		}
+		   if (count($parts) < 2) {
+			   throw new \InvalidArgumentException('Invalid CDR string: must have at least two comma-separated values.');
+		   }
 		$this->id = (int)$parts[0];
 		$idStr = (string)$parts[0];
 		$lastChar = substr($idStr, -1);
@@ -29,16 +29,20 @@ class CDR {
 	}
 
 	// Private parsing methods
-	private function BasicParsing() {
-		// Format: <id>,<bytes_used>
-		$parts = explode(',', $this->rawString);
-		$this->id = (int)$parts[0];
-		$this->bytes_used = isset($parts[1]) ? (int)$parts[1] : null;
-		$this->mnc = null;
-		$this->dmcc = null;
-		$this->cellid = null;
-		$this->ip = null;
-	}
+	   private function BasicParsing() {
+		   // Format: <id>,<bytes_used>
+		   $parts = explode(',', $this->rawString);
+		   // Must have exactly two parts, both numeric
+		   if (count($parts) !== 2 || !is_numeric(trim($parts[0])) || !is_numeric(trim($parts[1]))) {
+			   throw new \InvalidArgumentException('Invalid Basic Parsing: must have exactly two numeric values.');
+		   }
+		   $this->id = (int)$parts[0];
+		   $this->bytes_used = (int)$parts[1];
+		   $this->mnc = null;
+		   $this->dmcc = null;
+		   $this->cellid = null;
+		   $this->ip = null;
+	   }
 
 	private function ExtendedParsing() {
 		// Format: <id>,<dmcc>,<mnc>,<bytes_used>,<cellid>
