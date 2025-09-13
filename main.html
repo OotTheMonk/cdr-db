@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CDR Records</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background: #f0f0f0; }
+        .error { color: red; }
+        #upload-status { margin-top: 1em; }
+    </style>
+</head>
+<body>
+<h2>CDR Records</h2>
+<div id="error" class="error"></div>
+<table id="cdr-table">
+    <thead id="cdr-table-head"></thead>
+    <tbody id="cdr-table-body"></tbody>
+</table>
+
+<h3>Upload CDR File</h3>
+<form id="cdr-upload-form">
+    <input type="file" name="cdr_file" id="cdr_file" required />
+    <button type="submit">Upload</button>
+</form>
+<div id="upload-status"></div>
+
+<script>
+const getAllUrl = 'api/cdr/get_all.php';
+
+function renderTable(records) {
+    const thead = document.getElementById('cdr-table-head');
+    const tbody = document.getElementById('cdr-table-body');
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+    if (!records || !records.length) {
+        thead.innerHTML = '<tr><th>No records found</th></tr>';
+        return;
+    }
+    // Table headers
+    const cols = Object.keys(records[0]);
+    thead.innerHTML = '<tr>' + cols.map(col => `<th>${col}</th>`).join('') + '</tr>';
+    // Table rows
+    for (const row of records) {
+        tbody.innerHTML += '<tr>' + cols.map(col => `<td>${row[col] !== null ? row[col] : ''}</td>`).join('') + '</tr>';
+    }
+}
+
+async function fetchRecords() {
+    document.getElementById('error').textContent = '';
+    try {
+        const res = await fetch(getAllUrl);
+        if (!res.ok) throw new Error('Could not connect to API.');
+        const data = await res.json();
+        if (data.records) {
+            renderTable(data.records);
+        } else {
+            document.getElementById('error').textContent = 'No records found or invalid API response.';
+            renderTable([]);
+        }
+    } catch (e) {
+        document.getElementById('error').textContent = e.message;
+        renderTable([]);
+    }
+}
+
+document.getElementById('cdr-upload-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const statusDiv = document.getElementById('upload-status');
+    statusDiv.textContent = 'Uploading...';
+    const formData = new FormData();
+    const fileInput = document.getElementById('cdr_file');
+    if (!fileInput.files.length) {
+        statusDiv.textContent = 'Please select a file.';
+        return;
+    }
+    formData.append('cdr_file', fileInput.files[0]);
+    try {
+        const response = await fetch('api/cdr/upload.php', {
+            method: 'POST',
+            body: formData
+        });
+        const text = await response.text();
+        if (response.ok) {
+            statusDiv.textContent = 'Upload successful: ' + text;
+            await fetchRecords(); // Refresh table
+        } else {
+            statusDiv.textContent = 'Upload failed: ' + text;
+        }
+    } catch (err) {
+        statusDiv.textContent = 'Error: ' + err;
+    }
+});
+
+// Initial fetch
+fetchRecords();
+</script>
+</body>
+</html>
