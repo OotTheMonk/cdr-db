@@ -1,5 +1,6 @@
 <?php
 // Handles all database operations for CDR objects.
+// Uses prepared statements to prevent SQL injection.
 
 require_once __DIR__ . '/../Database/ConnectionManager.php';
 require_once __DIR__ . '/../Classes/CDR.php';
