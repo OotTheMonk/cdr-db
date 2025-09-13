@@ -14,6 +14,10 @@ class CDRRepository {
 
     public function save(CDR $cdr) {
         // Insert or update logic based on uniqueId
+        if (!$this->conn) {
+            error_log("save: No database connection.");
+            return false;
+        }
         $usage = $cdr->getNormalizedUsage();
         $uniqueId = $cdr->getUniqueId();
         $softDeleted = $cdr->getSoftDeleted();
@@ -78,6 +82,10 @@ class CDRRepository {
      * This is mostly to support the spec of the assignment to upload a file -> See that file in the db
      */
     public function truncateTable() {
+        if (!$this->conn) {
+            error_log("truncateTable: No database connection.");
+            return false;
+        }
         $sql = "TRUNCATE TABLE cdr";
         return $this->conn->query($sql);
     }

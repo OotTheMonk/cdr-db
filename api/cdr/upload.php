@@ -31,8 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $lastDigit = substr($id, -1);
             $cdr = CDR::fromRawString($line);
             if ($cdr) {
-                $repo->save($cdr);
-                $results[] = $cdr->getNormalizedUsage();
+                if($repo->save($cdr)) {
+                    $results[] = $cdr->getNormalizedUsage();
+                } else {
+                    $exceptionCount++;
+                }
             }
         } catch (Exception $e) {
             //Note: It is bad practice to expose raw exception messages in a production system
