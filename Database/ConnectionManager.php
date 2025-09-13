@@ -4,7 +4,7 @@ function GetLocalMySQLConnection()
 {
   $hostname = getenv("MYSQL_SERVER_NAME") ?: "localhost";
   $username = getenv("MYSQL_SERVER_USER_NAME") ?: "root";
-  $password = getenv("MYSQL_ROOT_PASSWORD") ?: "";
+  $password = getenv("MYSQL_ROOT_PASSWORD") ?: "example";
   $database = getenv("MYSQL_DATABASE_NAME") ?: "cdrdb";
 
   $conn = mysqli_connect($hostname, $username, $password, $database);

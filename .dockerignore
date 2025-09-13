@@ -1,0 +1,7 @@
+Dockerfile
+db_data/
+*.log
+*.tmp
+vendor/
+node_modules/
+.env
