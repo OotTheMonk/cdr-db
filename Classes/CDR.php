@@ -83,12 +83,7 @@ class CDR {
 		$hex = isset($parts[1]) ? $parts[1] : '';
 		if (strlen($hex) !== 24) {
 			// Not enough hex data
-			$this->mnc = null;
-			$this->bytes_used = null;
-			$this->cellid = null;
-			$this->ip = null;
-			$this->dmcc = null;
-			return;
+			throw new \InvalidArgumentException('Invalid Hex Parsing: hex string must be 24 characters.');
 		}
 		// Bytes 1-2: mnc
 		$this->mnc = hexdec(substr($hex, 0, 4));
