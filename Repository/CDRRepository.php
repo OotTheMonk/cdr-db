@@ -39,6 +39,26 @@ class CDRRepository {
         return $stmt->execute();
     }
 
+    /**
+     * Returns all non-soft-deleted CDRs as normalized arrays.
+     * Returns empty array if DB connection or query fails.
+     */
+    public function getAll() {
+        if (!$this->conn) {
+            return [];
+        }
+        $result = $this->conn->query('SELECT * FROM cdr WHERE softDeleted = 0');
+        if ($result === false) {
+            return [];
+        }
+        $records = [];
+        while ($row = $result->fetch_assoc()) {
+            $cdr = CDR::fromDbRow($row);
+            $records[] = $cdr->getNormalizedUsage();
+        }
+        return $records;
+    }
+
     //This is not used for the example project, but gives an example of what kind of retrieval methods you can add
     public function findById($uniqueId) {
         $sql = "SELECT * FROM cdr WHERE uniqueId = ?";
