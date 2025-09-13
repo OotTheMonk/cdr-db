@@ -51,4 +51,13 @@ class CDRRepository {
         return null;
     }
 
+    /**
+     * Truncates (clears) all records from the cdr table.
+     * NOTE: You would likely not want to include this in a production system.
+     * This is mostly to support the spec of the assignment to upload a file -> See that file in the db
+     */
+    public function truncateTable() {
+        $sql = "TRUNCATE TABLE cdr";
+        return $this->conn->query($sql);
+    }
 }
