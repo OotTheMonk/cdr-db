@@ -74,6 +74,11 @@ class CDR {
 	private function HexParsing() {
 		// Format: <id>,<hex>
 		$parts = explode(',', $this->rawString);
+        //ASSUMPTION: The specification does not strictly require the hex parsing id to be numeric.
+        // Since the specification of the normalized usage object has id as a number, I have chosen to enforce this here.
+		if (!is_numeric(trim($parts[0]))) {
+			throw new \InvalidArgumentException('Invalid Hex Parsing: id must be an integer.');
+		}
 		$this->id = (int)$parts[0];
 		$hex = isset($parts[1]) ? $parts[1] : '';
 		if (strlen($hex) !== 24) {
