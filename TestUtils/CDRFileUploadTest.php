@@ -6,15 +6,19 @@
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
 $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 $apiUrl = $protocol . '://' . $host . '/cdr-db/api/cdr/upload.php';
+
 $testFile = __DIR__ . '/test_file.txt';
+$badTestFile = __DIR__ . '/bad_test_file.txt';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!file_exists($testFile)) {
-        echo "<pre>Test file not found: $testFile</pre>";
+    $useBad = isset($_POST['upload_bad']);
+    $fileToUpload = $useBad ? $badTestFile : $testFile;
+    if (!file_exists($fileToUpload)) {
+        echo "<pre>Test file not found: $fileToUpload</pre>";
         exit;
     }
     $ch = curl_init();
-    $cfile = new CURLFile($testFile);
+    $cfile = new CURLFile($fileToUpload);
     curl_setopt($ch, CURLOPT_URL, $apiUrl);
     curl_setopt($ch, CURLOPT_POST, 1);
     curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => $cfile]);
@@ -41,6 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html><body>
 <h2>CDR File Upload Test</h2>
 <form method="post">
-    <button type="submit">Upload Test File</button>
+    <button type="submit" name="upload_test">Upload Test File</button>
+    <button type="submit" name="upload_bad">Upload Bad Test File</button>
 </form>
 </body></html>
