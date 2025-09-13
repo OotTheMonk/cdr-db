@@ -33,6 +33,7 @@ class CDR {
            return new self($str);
        }
 
+       //Make constructor private to prevent accidental misuse of skipValidation parameter
        private function __construct(string $rawString, bool $skipValidation = false) {
             if($skipValidation) {
                 return;
