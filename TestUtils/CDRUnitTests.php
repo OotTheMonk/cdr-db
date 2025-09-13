@@ -17,15 +17,31 @@ $tests = [
 		"cellid"=>hexdec("000000c0"),
 		"ip"=>"99.229.230.61",
 		"dmcc"=>null
-	], "Hex parsing (24 hex chars)"],
+	], "Hex parsing (Example 1)"],
 	["316,0e893279227712cac0014aff", [
+		"id"=>316,
+		"mnc"=>3721,
+		"bytes_used"=>12921,
+		"cellid"=>578228938,
+		"ip"=>"192.1.74.255",
+		"dmcc"=>null
+	], "Hex parsing (Example 2)"],
+	["316,0e893279227712cac0014af", [
 		"id"=>316,
 		"mnc"=>null,
 		"bytes_used"=>null,
 		"cellid"=>null,
 		"ip"=>null,
 		"dmcc"=>null
-	], "Hex parsing (invalid hex length)"],
+	], "Hex parsing (Too few hex chars)"],
+	["316,0e893279227712cac0014afff", [
+		"id"=>316,
+		"mnc"=>null,
+		"bytes_used"=>null,
+		"cellid"=>null,
+		"ip"=>null,
+		"dmcc"=>null
+	], "Hex parsing (Too many hex chars)"],
 ];
 
 $results = [];
