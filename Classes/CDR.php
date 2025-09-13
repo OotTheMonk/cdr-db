@@ -47,11 +47,25 @@ class CDR {
 	private function ExtendedParsing() {
 		// Format: <id>,<dmcc>,<mnc>,<bytes_used>,<cellid>
 		$parts = explode(',', $this->rawString);
+        //ASSUMPTION: "Fields are always in the same order" -> no optional fields
+		if (count($parts) !== 5) {
+			throw new \InvalidArgumentException('Invalid Extended Parsing: must have exactly five comma-separated values.');
+		}
 		$this->id = (int)$parts[0];
-		$this->dmcc = isset($parts[1]) ? $parts[1] : null;
-		$this->mnc = isset($parts[2]) ? (int)$parts[2] : null;
-		$this->bytes_used = isset($parts[3]) ? (int)$parts[3] : null;
-		$this->cellid = isset($parts[4]) ? (int)$parts[4] : null;
+		$this->dmcc = $parts[1];
+		// Validate integer fields using is_numeric(trim())
+		if (!is_numeric(trim($parts[2]))) {
+			throw new \InvalidArgumentException('Invalid Extended Parsing: mnc must be an integer.');
+		}
+		if (!is_numeric(trim($parts[3]))) {
+			throw new \InvalidArgumentException('Invalid Extended Parsing: bytes_used must be an integer.');
+		}
+		if (!is_numeric(trim($parts[4]))) {
+			throw new \InvalidArgumentException('Invalid Extended Parsing: cellid must be an integer.');
+		}
+		$this->mnc = (int)$parts[2];
+		$this->bytes_used = (int)$parts[3];
+		$this->cellid = (int)$parts[4];
 		$this->ip = null;
 	}
 
