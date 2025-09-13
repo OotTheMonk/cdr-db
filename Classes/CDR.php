@@ -103,6 +103,10 @@ class CDR {
 			// Not enough hex data
 			throw new \InvalidArgumentException('Invalid Hex Parsing: hex string must be 24 characters.');
 		}
+		// Validate that the hex string contains only valid hex characters
+		if (!preg_match('/^[0-9a-fA-F]{24}$/', $hex)) {
+			throw new \InvalidArgumentException('Invalid Hex Parsing: hex string must contain only hexadecimal characters (0-9, a-f, A-F).');
+		}
 		// Bytes 1-2: mnc
 		$this->mnc = hexdec(substr($hex, 0, 4));
 		// Bytes 3-4: bytes_used
