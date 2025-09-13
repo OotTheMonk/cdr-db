@@ -1,4 +1,7 @@
 <?php
+
+//Note: In addition to unit tests, this file also contains regression tests. They are included together for simplicity.
+
 require_once __DIR__ . '/../Classes/CDR.php';
 
 function htmlEscape($str) {
@@ -21,22 +24,6 @@ $tests = [
    ["4,0d39f,0,495594,214", ["id"=>4, "mnc"=>0, "bytes_used"=>495594, "dmcc"=>"0d39f", "cellid"=>214, "ip"=>null], "Extended parsing (5 fields)"],
    ["7194,b33,394,495593,192", ["id"=>7194, "mnc"=>394, "bytes_used"=>495593, "dmcc"=>"b33", "cellid"=>192, "ip"=>null], "Extended parsing (all fields)"],
    // Hex parsing unit tests
-   ["16,be833279000000c063e5e63d", [
-	   "id"=>16,
-	   "mnc"=>hexdec("be83"),
-	   "bytes_used"=>hexdec("3279"),
-	   "cellid"=>hexdec("000000c0"),
-	   "ip"=>"99.229.230.61",
-	   "dmcc"=>null
-   ], "Hex parsing (Example 1)"],
-   ["316,0e893279227712cac0014aff", [
-	   "id"=>316,
-	   "mnc"=>3721,
-	   "bytes_used"=>12921,
-	   "cellid"=>578228938,
-	   "ip"=>"192.1.74.255",
-	   "dmcc"=>null
-   ], "Hex parsing (Example 2)"],
    ["316,0e893279227712cac0014af", [
 	   "id"=>316,
 	   "mnc"=>null,
@@ -53,6 +40,103 @@ $tests = [
 	   "ip"=>null,
 	   "dmcc"=>null
    ], "Hex parsing (Too many hex chars)"],
+   ["16,be833279000000c063e5e63d", [
+	   "id"=>16,
+	   "mnc"=>hexdec("be83"),
+	   "bytes_used"=>hexdec("3279"),
+	   "cellid"=>hexdec("000000c0"),
+	   "ip"=>"99.229.230.61",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 1)"],
+   ["316,0e893279227712cac0014aff", [
+	   "id"=>316,
+	   "mnc"=>3721,
+	   "bytes_used"=>12921,
+	   "cellid"=>578228938,
+	   "ip"=>"192.1.74.255",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 2)"],
+   //Additional samples sourced from ChatGPT
+   ["1006,20d2a225eb0ca1c43e198ce5", [
+	   "id"=>1006,
+	   "mnc"=>0x20d2,
+	   "bytes_used"=>0xa225,
+	   "cellid"=>0xeb0ca1c4,
+	   "ip"=>"62.25.140.229",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 3)"],
+   ["1006,1003be786b0af0d530175326", [
+	   "id"=>1006,
+	   "mnc"=>0x1003,
+	   "bytes_used"=>0xbe78,
+	   "cellid"=>0x6b0af0d5,
+	   "ip"=>"48.23.83.38",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 4)"],
+   ["1006,05a37f5aa55d537dc66c07b8", [
+	   "id"=>1006,
+	   "mnc"=>0x05a3,
+	   "bytes_used"=>0x7f5a,
+	   "cellid"=>0xa55d537d,
+	   "ip"=>"198.108.7.184",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 5)"],
+   ["1006,166d3700af12361c57d06d48", [
+	   "id"=>1006,
+	   "mnc"=>0x166d,
+	   "bytes_used"=>0x3700,
+	   "cellid"=>0xaf12361c,
+	   "ip"=>"87.208.109.72",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 6)"],
+   ["1006,07b1087118403e710616f9e2", [
+	   "id"=>1006,
+	   "mnc"=>0x07b1,
+	   "bytes_used"=>0x0871,
+	   "cellid"=>0x18403e71,
+	   "ip"=>"6.22.249.226",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 7)"],
+   ["1006,082b9c0a506cb94fefad1760", [
+	   "id"=>1006,
+	   "mnc"=>0x082b,
+	   "bytes_used"=>0x9c0a,
+	   "cellid"=>0x506cb94f,
+	   "ip"=>"239.173.23.96",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 8)"],
+   ["1006,1a9358b5dadff84ce0d75701", [
+	   "id"=>1006,
+	   "mnc"=>0x1a93,
+	   "bytes_used"=>0x58b5,
+	   "cellid"=>0xdadff84c,
+	   "ip"=>"224.215.87.1",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 9)"],
+   ["1006,009db6d1552985948a0da3c0", [
+	   "id"=>1006,
+	   "mnc"=>0x009d,
+	   "bytes_used"=>0xb6d1,
+	   "cellid"=>0x55298594,
+	   "ip"=>"138.13.163.192",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 10)"],
+   ["1006,1794bcb38836413866736354", [
+	   "id"=>1006,
+	   "mnc"=>0x1794,
+	   "bytes_used"=>0xbcb3,
+	   "cellid"=>0x88364138,
+	   "ip"=>"102.115.99.84",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 11)"],
+   ["1006,022917fcefe97fad15f3f44e", [
+	   "id"=>1006,
+	   "mnc"=>0x0229,
+	   "bytes_used"=>0x17fc,
+	   "cellid"=>0xefe97fad,
+	   "ip"=>"21.243.244.78",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 12)"],
 ];
 
 $results = [];
