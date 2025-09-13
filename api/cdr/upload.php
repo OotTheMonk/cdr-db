@@ -2,11 +2,19 @@
 //IMPORTANT TODO: This file is not authenticated. This is a database entry point and should be strongly protected.
 //IMPORTANT TODO: dmcc is an unvalidated string. The specification document does not specify what dmcc is, and so could be code or other malicious content that could create possible attack vectors.
 //  We should validate the possible range of values for dmcc and reject anything outside that range as soon as possible.
+//IMPORTANT TODO: Validate Apache config to ensure this and other APIs do not leak server information
+//  e.g. # in httpd.conf or apache2.conf
+//         ServerTokens Prod
+//         ServerSignature Off
 
 // Endpoint: /api/cdr/upload.php
 // Accepts a file upload and processes each line
 require_once '../../Classes/CDR.php';
 require_once '../../Repository/CDRRepository.php';
+
+// Prevent PHP from exposing version info in headers
+header_remove('X-Powered-By');
+header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file = $_FILES['file']['tmp_name'];
@@ -38,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
         }
     }
     fclose($handle);
-    header('Content-Type: application/json');
     $message = "Upload complete. Failed lines: $exceptionCount.";
     echo json_encode([
         'status' => 'success',
