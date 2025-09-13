@@ -43,6 +43,14 @@ $tests = [
 	   "ip"=>"99.229.230.61",
 	   "dmcc"=>null
    ], "Hex parsing (Example 1)"],
+    ["16,BE833279000000C063E5E63D", [
+	   "id"=>16,
+	   "mnc"=>hexdec("be83"),
+	   "bytes_used"=>hexdec("3279"),
+	   "cellid"=>hexdec("000000c0"),
+	   "ip"=>"99.229.230.61",
+	   "dmcc"=>null
+   ], "Hex parsing (Example 1 - accepts upper case hex chars)"],
    ["316,0e893279227712cac0014aff", [
 	   "id"=>316,
 	   "mnc"=>3721,
