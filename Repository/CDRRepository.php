@@ -38,6 +38,7 @@ class CDRRepository {
         return $stmt->execute();
     }
 
+    //This is not used for the example project, but gives an example of what kind of retrieval methods you can add
     public function findById($uniqueId) {
         $sql = "SELECT * FROM cdr WHERE uniqueId = ?";
         $stmt = $this->conn->prepare($sql);
