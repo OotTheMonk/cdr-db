@@ -29,7 +29,7 @@ class CDR {
 
        public function __construct(string $rawString) {
 	       $this->rawString = $rawString;
-	       $this->uniqueId = null;
+	       $this->uniqueId = null;//uniqueId of null means not yet stored in DB
 	       $this->timeReceived = date('Y-m-d H:i:s');
 	       $this->softDeleted = 0;
 	       $parts = explode(',', $rawString);
