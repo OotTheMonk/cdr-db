@@ -2,31 +2,51 @@
 
 
 class CDR {
-	private $rawString;
+	private $uniqueId;
+	private $timeReceived;
+	private $softDeleted;
 	private $id;
 	private $mnc;
 	private $bytes_used;
 	private $dmcc;
 	private $cellid;
 	private $ip;
+	private $rawString;
+       // Hydrate from DB array
+       public static function fromArray(array $arr) {
+	       $cdr = new self('');
+	       $cdr->uniqueId = $arr['uniqueId'] ?? null;
+	       $cdr->timeReceived = $arr['timeReceived'] ?? null;
+	       $cdr->softDeleted = $arr['softDeleted'] ?? null;
+	       $cdr->id = $arr['id'] ?? null;
+	       $cdr->mnc = $arr['mnc'] ?? null;
+	       $cdr->bytes_used = $arr['bytes_used'] ?? null;
+	       $cdr->dmcc = $arr['dmcc'] ?? null;
+	       $cdr->cellid = $arr['cellid'] ?? null;
+	       $cdr->ip = $arr['ip'] ?? null;
+	       return $cdr;
+       }
 
-	public function __construct(string $rawString) {
-		$this->rawString = $rawString;
-		$parts = explode(',', $rawString);
-		   if (count($parts) < 2) {
-			   throw new \InvalidArgumentException('Invalid CDR string: must have at least two comma-separated values.');
-		   }
-		$this->id = (int)$parts[0];
-		$idStr = (string)$parts[0];
-		$lastChar = substr($idStr, -1);
-		if ($lastChar === '4') {
-			$this->ExtendedParsing();
-		} elseif ($lastChar === '6') {
-			$this->HexParsing();
-		} else {
-			$this->BasicParsing();
-		}
-	}
+       public function __construct(string $rawString) {
+	       $this->rawString = $rawString;
+	       $this->uniqueId = null;
+	       $this->timeReceived = date('Y-m-d H:i:s');
+	       $this->softDeleted = 0;
+	       $parts = explode(',', $rawString);
+	       if (count($parts) < 2) {
+		       throw new \InvalidArgumentException('Invalid CDR string: must have at least two comma-separated values.');
+	       }
+	       $this->id = (int)$parts[0];
+	       $idStr = (string)$parts[0];
+	       $lastChar = substr($idStr, -1);
+	       if ($lastChar === '4') {
+		       $this->ExtendedParsing();
+	       } elseif ($lastChar === '6') {
+		       $this->HexParsing();
+	       } else {
+		       $this->BasicParsing();
+	       }
+       }
 
 	// Private parsing methods
 	   private function BasicParsing() {
