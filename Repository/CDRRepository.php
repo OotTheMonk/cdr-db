@@ -1,5 +1,4 @@
 <?php
-// Repository/CDRRepository.php
 // Handles all database operations for CDR objects.
 
 require_once __DIR__ . '/../Database/ConnectionManager.php';
@@ -9,24 +8,32 @@ class CDRRepository {
     private $conn;
 
     public function __construct() {
-        $this->conn = ConnectionManager::getConnection();
+        $this->conn = GetLocalMySQLConnection();
     }
 
     public function save(CDR $cdr) {
         // Insert or update logic based on uniqueId
-        $sql = "REPLACE INTO cdr (uniqueId, timeReceived, softDeleted, id, mnc, bytes_used, dmcc, cellid, ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $usage = $cdr->getNormalizedUsage();
+        $uniqueId = $cdr->getUniqueId();
+        $softDeleted = $cdr->getSoftDeleted();
+        $id = $usage['id'];
+        $mnc = $usage['mnc'];
+        $bytes_used = $usage['bytes_used'];
+        $dmcc = $usage['dmcc'];
+        $cellid = $usage['cellid'];
+        $ip = $usage['ip'];
+        $sql = "REPLACE INTO cdr (uniqueId, softDeleted, id, mnc, bytes_used, dmcc, cellid, ip) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param(
-            'isiiissis',
-            $cdr->uniqueId,
-            $cdr->timeReceived,
-            $cdr->softDeleted,
-            $cdr->id,
-            $cdr->mnc,
-            $cdr->bytes_used,
-            $cdr->dmcc,
-            $cdr->cellid,
-            $cdr->ip
+            'isiiisis',
+            $uniqueId,
+            $softDeleted,
+            $id,
+            $mnc,
+            $bytes_used,
+            $dmcc,
+            $cellid,
+            $ip
         );
         return $stmt->execute();
     }
@@ -43,5 +50,4 @@ class CDRRepository {
         return null;
     }
 
-    // Add more methods as needed (delete, findAll, etc.)
 }

@@ -46,6 +46,15 @@ class CDR {
 	       }
        }
 
+       //Public get functions
+        public function getUniqueId() {
+            return $this->uniqueId;
+        }
+
+        public function getSoftDeleted() {
+            return $this->softDeleted;
+        }
+
 	// Private parsing methods
 	   private function BasicParsing() {
 		   // Format: <id>,<bytes_used>
