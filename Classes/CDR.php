@@ -51,9 +51,11 @@ class CDR {
 		if (count($parts) !== 5) {
 			throw new \InvalidArgumentException('Invalid Extended Parsing: must have exactly five comma-separated values.');
 		}
+		if (!is_numeric(trim($parts[0]))) {
+			throw new \InvalidArgumentException('Invalid Extended Parsing: id must be an integer.');
+		}
 		$this->id = (int)$parts[0];
 		$this->dmcc = $parts[1];
-		// Validate integer fields using is_numeric(trim())
 		if (!is_numeric(trim($parts[2]))) {
 			throw new \InvalidArgumentException('Invalid Extended Parsing: mnc must be an integer.');
 		}
