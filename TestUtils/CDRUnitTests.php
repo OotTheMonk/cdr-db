@@ -12,8 +12,8 @@ $tests = [
    //ID Parsing unit tests
    ["", "exception", "Null input (expect exception)"],
    ["fred", "exception", "String id (expect exception)"],
-   ["fred1,123", "exception", "String id (expect exception)"],
    // Basic parsing unit tests
+   ["fred1,123", "exception", "String id (expect exception)"],
    ["1111", "exception", "Basic parsing (id only, expect exception)"],
    ["1111,", "exception", "Basic parsing (id and comma, expect exception)",],
    ["1111,fred", "exception", "Basic parsing (id and string bytes, expect exception)",],
@@ -21,9 +21,12 @@ $tests = [
    ["9991,2935", ["id"=>9991, "mnc"=>null, "bytes_used"=>2935, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (2 fields)"],
    ["7291,293451", ["id"=>7291, "mnc"=>null, "bytes_used"=>293451, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (large bytes)"],
    // Extended parsing unit tests
+   ["fred4,123", "exception", "String id (expect exception)"],
    ["4,0d39f,0,495594,214", ["id"=>4, "mnc"=>0, "bytes_used"=>495594, "dmcc"=>"0d39f", "cellid"=>214, "ip"=>null], "Extended parsing (5 fields)"],
    ["7194,b33,394,495593,192", ["id"=>7194, "mnc"=>394, "bytes_used"=>495593, "dmcc"=>"b33", "cellid"=>192, "ip"=>null], "Extended parsing (all fields)"],
    // Hex parsing unit tests
+   ["fred6,be833279000000c063e5e63d", "exception", "String id (expect exception)"],
+   ["1116,", "exception", "Hex parsing (id and comma, expect exception)",],
    ["316,0e893279227712cac0014af", [
 	   "id"=>316,
 	   "mnc"=>null,
@@ -142,29 +145,34 @@ $tests = [
 $results = [];
 $allPassed = true;
 foreach ($tests as $test) {
-   list($input, $expected, $desc) = $test;
-   $result = ["desc" => $desc, "pass" => false, "input" => $input, "expected" => $expected, "actual" => null, "exception" => null];
-   try {
-	   $cdr = new CDR($input);
-	   $actual = $cdr->getNormalizedUsage();
-	   $result["actual"] = $actual;
-	   if ($expected === "exception") {
-		   $result["pass"] = false;
-	   } else {
-		   $result["pass"] = ($actual == $expected);
-		   $allPassed = $allPassed && $result["pass"];
-	   }
-   } catch (Exception $e) {
-	   $result["exception"] = $e->getMessage();
-	   if ($expected === "exception") {
-		   $result["pass"] = true;
-		   $allPassed = $allPassed && true;
-	   } else {
-		   $result["pass"] = false;
-		   $allPassed = false;
-	   }
-   }
-   $results[] = $result;
+	list($input, $expected, $desc) = $test;
+	$result = ["desc" => $desc, "pass" => false, "input" => $input, "expected" => $expected, "actual" => null, "exception" => null];
+	try {
+		$cdr = new CDR($input);
+		$actual = $cdr->getNormalizedUsage();
+		$result["actual"] = $actual;
+		if ($expected === "exception") {
+			$result["pass"] = false;
+			$allPassed = false;
+		} else {
+			$result["pass"] = ($actual == $expected);
+			if (!$result["pass"]) {
+				$allPassed = false;
+			}
+		}
+	} catch (Exception $e) {
+		$result["exception"] = $e->getMessage();
+		if ($expected === "exception") {
+			$result["pass"] = true;
+		} else {
+			$result["pass"] = false;
+			$allPassed = false;
+		}
+		if (!$result["pass"]) {
+			$allPassed = false;
+		}
+	}
+	$results[] = $result;
 }
 
 ?><!DOCTYPE html>
