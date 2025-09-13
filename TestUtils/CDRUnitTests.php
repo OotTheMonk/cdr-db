@@ -32,22 +32,8 @@ $tests = [
    // Hex parsing unit tests
    ["fred6,be833279000000c063e5e63d", "exception", "String id (expect exception)"],
    ["1116,", "exception", "Hex parsing (id and comma, expect exception)",],
-   ["316,0e893279227712cac0014af", [
-	   "id"=>316,
-	   "mnc"=>null,
-	   "bytes_used"=>null,
-	   "cellid"=>null,
-	   "ip"=>null,
-	   "dmcc"=>null
-   ], "Hex parsing (Too few hex chars)"],
-   ["316,0e893279227712cac0014afff", [
-	   "id"=>316,
-	   "mnc"=>null,
-	   "bytes_used"=>null,
-	   "cellid"=>null,
-	   "ip"=>null,
-	   "dmcc"=>null
-   ], "Hex parsing (Too many hex chars)"],
+   ["316,0e893279227712cac0014af", "exception", "Hex parsing (Too few hex chars)"],
+   ["316,0e893279227712cac0014afff", "exception", "Hex parsing (Too many hex chars)"],
    ["16,be833279000000c063e5e63d", [
 	   "id"=>16,
 	   "mnc"=>hexdec("be83"),
