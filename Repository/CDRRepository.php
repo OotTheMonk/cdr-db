@@ -47,7 +47,7 @@ class CDRRepository {
         $stmt->execute();
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()) {
-            return CDR::fromArray($row);
+            return CDR::fromDbRow($row);
         }
         return null;
     }

@@ -13,22 +13,30 @@ class CDR {
 	private $cellid;
 	private $ip;
 	private $rawString;
-       // Hydrate from DB array
-       public static function fromArray(array $arr) {
-	       $cdr = new self('');
-	       $cdr->uniqueId = $arr['uniqueId'] ?? null;
-	       $cdr->timeReceived = $arr['timeReceived'] ?? null;
-	       $cdr->softDeleted = $arr['softDeleted'] ?? null;
-	       $cdr->id = $arr['id'] ?? null;
-	       $cdr->mnc = $arr['mnc'] ?? null;
-	       $cdr->bytes_used = $arr['bytes_used'] ?? null;
-	       $cdr->dmcc = $arr['dmcc'] ?? null;
-	       $cdr->cellid = $arr['cellid'] ?? null;
-	       $cdr->ip = $arr['ip'] ?? null;
+
+       // Hydrate from DB row
+       public static function fromDbRow(array $row) {
+	       $cdr = new self('', true);
+	       $cdr->uniqueId = $row['uniqueId'] ?? null;
+	       $cdr->timeReceived = $row['timeReceived'] ?? null;
+	       $cdr->softDeleted = $row['softDeleted'] ?? null;
+	       $cdr->id = $row['id'] ?? null;
+	       $cdr->mnc = $row['mnc'] ?? null;
+	       $cdr->bytes_used = $row['bytes_used'] ?? null;
+	       $cdr->dmcc = $row['dmcc'] ?? null;
+	       $cdr->cellid = $row['cellid'] ?? null;
+	       $cdr->ip = $row['ip'] ?? null;
 	       return $cdr;
        }
 
-       public function __construct(string $rawString) {
+       public static function fromRawString(string $str) {
+           return new self($str);
+       }
+
+       private function __construct(string $rawString, bool $skipValidation = false) {
+            if($skipValidation) {
+                return;
+            }
 	       $this->rawString = $rawString;
 	       $this->uniqueId = null;//uniqueId of null means not yet stored in DB
 	       $this->timeReceived = date('Y-m-d H:i:s');

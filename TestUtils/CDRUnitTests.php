@@ -148,7 +148,7 @@ foreach ($tests as $test) {
 	list($input, $expected, $desc) = $test;
 	$result = ["desc" => $desc, "pass" => false, "input" => $input, "expected" => $expected, "actual" => null, "exception" => null];
 	try {
-		$cdr = new CDR($input);
+		$cdr = CDR::fromRawString($input);
 		$actual = $cdr->getNormalizedUsage();
 		$result["actual"] = $actual;
 		if ($expected === "exception") {

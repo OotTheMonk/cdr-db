@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
             $fields = explode(',', $line);
             $id = $fields[0];
             $lastDigit = substr($id, -1);
-            $cdr = new CDR($line);
+            $cdr = CDR::fromRawString($line);
             if ($cdr) {
                 $repo->save($cdr);
                 $results[] = $cdr->getNormalizedUsage();

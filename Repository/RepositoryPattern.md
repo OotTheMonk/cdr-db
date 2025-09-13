@@ -21,7 +21,7 @@ The Repository (or DAO) pattern is a design approach that separates the logic th
 
 ## Example Usage
 ```php
-$cdr = new CDR(/* ... */);
+$cdr = CDR::fromRawString(/* ... */);
 $repo = new CDRRepository();
 $repo->save($cdr);
 ```
