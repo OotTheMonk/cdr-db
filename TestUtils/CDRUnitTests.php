@@ -6,14 +6,21 @@ function htmlEscape($str) {
 }
 
 $tests = [
-   // Expect exception: only id
+   //ID Parsing unit tests
+   ["", "exception", "Null input (expect exception)"],
+   ["fred", "exception", "String id (expect exception)"],
+   ["fred1,123", "exception", "String id (expect exception)"],
+   // Basic parsing unit tests
    ["1111", "exception", "Basic parsing (id only, expect exception)"],
-   // Expect exception: id and comma, but no value after comma
    ["1111,", "exception", "Basic parsing (id and comma, expect exception)",],
+   ["1111,fred", "exception", "Basic parsing (id and string bytes, expect exception)",],
+   ["1111,123,456", "exception", "Basic parsing (must be exactly two numbers, expect exception)",],
    ["9991,2935", ["id"=>9991, "mnc"=>null, "bytes_used"=>2935, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (2 fields)"],
    ["7291,293451", ["id"=>7291, "mnc"=>null, "bytes_used"=>293451, "dmcc"=>null, "cellid"=>null, "ip"=>null], "Basic parsing (large bytes)"],
+   // Extended parsing unit tests
    ["4,0d39f,0,495594,214", ["id"=>4, "mnc"=>0, "bytes_used"=>495594, "dmcc"=>"0d39f", "cellid"=>214, "ip"=>null], "Extended parsing (5 fields)"],
    ["7194,b33,394,495593,192", ["id"=>7194, "mnc"=>394, "bytes_used"=>495593, "dmcc"=>"b33", "cellid"=>192, "ip"=>null], "Extended parsing (all fields)"],
+   // Hex parsing unit tests
    ["16,be833279000000c063e5e63d", [
 	   "id"=>16,
 	   "mnc"=>hexdec("be83"),
