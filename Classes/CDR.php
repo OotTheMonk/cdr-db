@@ -35,13 +35,11 @@ class CDR {
 	       $parts = explode(',', $rawString);
 	       if (count($parts) < 2) {
 		       throw new \InvalidArgumentException('Invalid CDR string: must have at least two comma-separated values.');
-	       }
+	       }        
 	       $this->id = (int)$parts[0];
-	       $idStr = (string)$parts[0];
-	       $lastChar = substr($idStr, -1);
-	       if ($lastChar === '4') {
+	       if($this->id % 10 === 4) {
 		       $this->ExtendedParsing();
-	       } elseif ($lastChar === '6') {
+	       } else if($this->id % 10 === 6) {
 		       $this->HexParsing();
 	       } else {
 		       $this->BasicParsing();
