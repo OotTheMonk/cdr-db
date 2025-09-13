@@ -8,6 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['file'])) {
     $file = $_FILES['file']['tmp_name'];
     $handle = fopen($file, 'r');
     $repo = new CDRRepository();
+    //Note: In a real system, you would likely want to append or deduplicate instead of truncating
+    $repo->truncateTable(); // Clear existing records before upload
     $results = [];
     while (($line = fgets($handle)) !== false) {
         $line = trim($line);
