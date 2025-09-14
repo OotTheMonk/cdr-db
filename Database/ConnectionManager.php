@@ -5,7 +5,7 @@ function GetLocalMySQLConnection()
   $hostname = getenv("MYSQL_SERVER_NAME") ?: "localhost";
   $username = getenv("MYSQL_SERVER_USER_NAME") ?: "root";
   $password = getenv("MYSQL_ROOT_PASSWORD") ?: "";
-  $database = getenv("MYSQL_DATABASE_NAME") ?: "cdrdb";
+  $database = getenv("MYSQL_DATABASE") ?: "cdrdb";
 
   try {
     mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);

@@ -9,15 +9,17 @@ services:
     depends_on:
       - db
     environment:
-      - MYSQL_HOST=db
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=example
+      - MYSQL_SERVER_NAME=db
+      - MYSQL_SERVER_USER_NAME=root
+      - MYSQL_ROOT_PASSWORD=test
       - MYSQL_DATABASE=cdrdb
   db:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: example
+      MYSQL_SERVER_NAME: db
+      MYSQL_SERVER_USER_NAME: root
+      MYSQL_ROOT_PASSWORD: test
       MYSQL_DATABASE: cdrdb
     ports:
       - "3306:3306"
