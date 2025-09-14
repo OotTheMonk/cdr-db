@@ -1,58 +1,62 @@
-<?php
-// TestUtils/CDRFileUploadTest.php
-// Visit this page in browser to upload a test file to the API
 
-// Use absolute URL for API endpoint
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-$apiUrl = $protocol . '://' . $host . '/cdr-db/api/cdr/upload.php';
-
-
-$testFile = __DIR__ . '/test_file.txt';
-$badTestFile = __DIR__ . '/bad_test_file.txt';
-$invalidTestFile = __DIR__ . '/invalid_test_file.txt';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['upload_bad'])) {
-        $fileToUpload = $badTestFile;
-    } elseif (isset($_POST['upload_invalid'])) {
-        $fileToUpload = $invalidTestFile;
-    } else {
-        $fileToUpload = $testFile;
-    }
-    if (!file_exists($fileToUpload)) {
-        echo "<pre>Test file not found: $fileToUpload</pre>";
-        exit;
-    }
-    $ch = curl_init();
-    $cfile = new CURLFile($fileToUpload);
-    curl_setopt($ch, CURLOPT_URL, $apiUrl);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, ['file' => $cfile]);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, true); // Get headers + body
-    $response = curl_exec($ch);
-    $err = curl_error($ch);
-    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-    if ($err) {
-        echo "<pre>cURL Error: $err</pre>";
-    } else {
-        // Separate headers and body
-        $header_size = strpos($response, "\r\n\r\n");
-        $body = substr($response, $header_size + 4);
-        echo "<pre>API Response:\n" . htmlspecialchars($body) . "</pre>";
-    }
-    echo '<a href="?">Try Again</a>';
-    exit;
-}
-?>
 <!DOCTYPE html>
-<html><body>
+<html>
+<head>
+    <title>CDR File Upload Test</title>
+    <style>
+        .error { color: red; }
+        #upload-status { margin-top: 1em; }
+    </style>
+</head>
+<body>
 <h2>CDR File Upload Test</h2>
-<form method="post">
-    <button type="submit" name="upload_test">Upload Test File</button>
-    <button type="submit" name="upload_bad">Upload Bad Test File</button>
-    <button type="submit" name="upload_invalid">Upload Invalid Test File</button>
+<form id="cdr-upload-form">
+    <label>Choose test file:
+        <select id="test-file-select">
+            <option value="test_file.txt">Test File</option>
+            <option value="bad_test_file.txt">Bad Test File</option>
+            <option value="invalid_test_file.txt">Invalid Test File</option>
+        </select>
+    </label>
+    <button type="submit">Upload Selected Test File</button>
 </form>
-</body></html>
+<div id="upload-status"></div>
+<script>
+// This JS mimics the upload strategy from main.html
+const apiUrl = '../api/cdr/upload.php';
+const testFiles = {
+    'test_file.txt': 'test_file.txt',
+    'bad_test_file.txt': 'bad_test_file.txt',
+    'invalid_test_file.txt': 'invalid_test_file.txt'
+};
+
+document.getElementById('cdr-upload-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const statusDiv = document.getElementById('upload-status');
+    statusDiv.textContent = 'Uploading...';
+    const select = document.getElementById('test-file-select');
+    const fileName = select.value;
+    try {
+        // Fetch the file as a blob from the server (TestUtils folder)
+        const fileResponse = await fetch(fileName);
+        if (!fileResponse.ok) throw new Error('Could not load test file: ' + fileName);
+        const fileBlob = await fileResponse.blob();
+        const formData = new FormData();
+        formData.append('file', fileBlob, fileName);
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            body: formData
+        });
+        const text = await response.text();
+        if (response.ok) {
+            statusDiv.textContent = 'Upload successful: ' + text;
+        } else {
+            statusDiv.textContent = 'Upload failed: ' + text;
+        }
+    } catch (err) {
+        statusDiv.textContent = 'Error: ' + err;
+    }
+});
+</script>
+</body>
+</html>
