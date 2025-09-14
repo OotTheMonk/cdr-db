@@ -14,3 +14,6 @@ Navigate to the directory and execute:
 ```docker-compose up --build```
 Visit the main site to test
 ```http://localhost:8080/main.html```
+
+# API
+Use /api/cdr/get_all.php to get a JSON of all CDR records
