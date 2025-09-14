@@ -22,7 +22,6 @@
 </form>
 <div id="upload-status"></div>
 <script>
-// This JS mimics the upload strategy from main.html
 const apiUrl = '../api/cdr/upload.php';
 const testFiles = {
     'test_file.txt': 'test_file.txt',
